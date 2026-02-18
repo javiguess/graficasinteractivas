@@ -1,0 +1,102 @@
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+#map {
+    width: 600px;
+    height: 660px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+#weather-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+}
+
+.chart-container {
+    width: 100%;
+    height: 250px;
+    margin-top: 20px;
+}
+
+#city-name {
+    text-align: center;
+    margin-top: 0;
+    width: 100%;
+    margin-left: 40px;
+}
+
+.weather-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+#current-weather img {
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.main-stats {
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px; /* Reducimos el padding */
+    margin-bottom: 10px;
+}
+
+table td {
+    padding: 4px 0;
+}
+
+.temp-principal {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
+}
+
+.desc-clima {
+    text-transform: capitalize;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    text-align: center;
+}
+
+.detail-item span {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.detail-item strong {
+    font-size: 1.1rem;
+    color: #222;
+}

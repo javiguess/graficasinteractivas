@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="dashboard">
+        <div id="map"></div>
+
+        <div id="weather-info">
+            <h2 id="city-name">Selecciona un punto</h2>
+            
+            <div id="current-weather">
+                </div>
+
+            <div class="chart-container">
+                <canvas id="forecast-chart"></canvas>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
