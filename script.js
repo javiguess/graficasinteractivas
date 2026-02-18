@@ -38,48 +38,53 @@ window.onload = () => {
     renderChart(mockForecastData); 
 };*/
 
-async function getWeatherData(lat, lng) {
-    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${API_KEY}`;
-    const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=metric&appid=${API_KEY}`;
 
-    try {
-        const [resCurrent, resForecast] = await Promise.all([
-            fetch(urlCurrent).then(r => r.json()),
-            fetch(urlForecast).then(r => r.json())
-            
-        ]);
-        displayWeather(resCurrent);
-        renderChart(resForecast);
-        const response = await fetch(urlForecast);
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error de la API:", errorData.message);
-            return;
-        }
-    } catch (error) {
-        console.error("Error obteniendo datos:", error);
-    }
-}
-
-
-const map = L.map('map').setView([0, 0], 2);
+const map = L.map('map').setView([0, 0], 2); // Inicialización temporal
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let marker;
 
-navigator.geolocation.getCurrentPosition(pos => {
-    const { latitude, longitude } = pos.coords;
-    updateLocation(latitude, longitude);
-});
+navigator.geolocation.getCurrentPosition(
+    pos => {
+        const { latitude, longitude } = pos.coords;
+        updateLocation(latitude, longitude);
+    },
+    err => {
+        console.warn("Geolocalización denegada. Usando ubicación por defecto.");
+        updateLocation(40.4168, -3.7038);
+    }
+);
 
 map.on('click', e => {
     const { lat, lng } = e.latlng;
     updateLocation(lat, lng);
 });
 
+async function getWeatherData(lat, lng) {
+    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&lang=es&appid=${API_KEY}`;
+    const urlForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&units=metric&lang=es&appid=${API_KEY}`;
+
+    try {
+        const [resCurrent, resForecast] = await Promise.all([
+            fetch(urlCurrent).then(r => r.ok ? r.json() : Promise.reject(r)),
+            fetch(urlForecast).then(r => r.ok ? r.json() : Promise.reject(r))
+        ]);
+
+        displayWeather(resCurrent);
+        // Limitamos a los primeros 8 registros (24h) para el gráfico
+        const next24h = { ...resForecast, list: resForecast.list.slice(0, 9) };
+        renderChart(next24h);
+
+    } catch (error) {
+        console.error("Error obteniendo datos de la API:", error);
+    }
+}
+
 function updateLocation(lat, lng) {
     if (marker) map.removeLayer(marker);
     marker = L.marker([lat, lng]).addTo(map);
+    
+    // .setView es más directo para el inicio, .flyTo es mejor para el click
     map.flyTo([lat, lng], 13);
     
     getWeatherData(lat, lng);
@@ -147,7 +152,7 @@ function renderChart(data) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Temperatura Próximas 24h (°C)',
+                label: 'Temperatura (°C)',
                 data: temps,
                 borderColor: '#ff5733',
                 backgroundColor: 'rgba(255, 87, 51, 0.2)',
